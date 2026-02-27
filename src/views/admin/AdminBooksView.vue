@@ -60,8 +60,8 @@
                         <td>{{ book.category }}</td>
                         <td>{{ book.price.toLocaleString("es-CL") }}</td>
                         <td>
-                            <button class="btn btn-warning mx-1">Actualizar</button>
-                            <button class="btn btn-danger mx-1">Eliminar</button>
+                            <button class="btn btn-warning mx-1">Editar</button>
+                            <button class="btn btn-danger mx-1" @click="deleteBook(book.id, book.title)">Eliminar</button>
                         </td>
                     </tr>
                 </tbody>
@@ -77,6 +77,7 @@ import { ref } from 'vue';
 
 const booksStore = useBooksStore();
 
+const idCurrentBook = ref(0);
 
 const bookForm = ref({
     id: '',
@@ -111,6 +112,18 @@ const addBook = () => {
     }
 
     resetBookForm();
+}
+
+const deleteBook = (id, title) => {
+    if(confirm(`Está seguro que desea eliminar el libro: ${title}?`)){
+        let respuesta = booksStore.deleteBook(id);
+
+        if(respuesta.success){
+            alert(respuesta.success);
+        }else {
+            alert(respuesta.error);
+        }
+    }
 }
 
 </script>

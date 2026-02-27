@@ -110,6 +110,7 @@ export const useBooksStore = defineStore('books', () => {
   const quantityBooks = computed(() => books.value.length)
   const quantityCategories = computed(() => categories.value.length)
 
+
   // ACTIONS -> MÉTODOS
   function addBook(title, author, category, price, image) {
     let id = uuidv4()
@@ -119,7 +120,19 @@ export const useBooksStore = defineStore('books', () => {
     books.value.push(newBook)
 
     return { success: 'Libro creado con éxito.' }
+  };
+
+
+  function deleteBook(id){
+
+    let indexBook = books.value.findIndex(b => b.id == id);
+
+    if(indexBook < 0) return {error: "Libro no encontrado..."};
+
+    books.value.splice(indexBook, 1);
+
+    return {success: "Libro eliminado con éxito"};
   }
 
-  return { categories, books, quantityBooks, quantityCategories, addBook }
+  return { categories, books, quantityBooks, quantityCategories, addBook, deleteBook }
 })
