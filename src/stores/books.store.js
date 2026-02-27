@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { v4 as uuidv4 } from 'uuid'
 
 export const useBooksStore = defineStore('books', () => {
   //ESTADOS
@@ -110,10 +111,15 @@ export const useBooksStore = defineStore('books', () => {
   const quantityCategories = computed(() => categories.value.length)
 
   // ACTIONS -> MÉTODOS
-  // function increment() {
+  function addBook(title, author, category, price, image) {
+    let id = uuidv4()
 
-  //   count.value++
-  // }
+    let newBook = { id, title, author, category, price, image }
 
-  return { categories, books, quantityBooks, quantityCategories }
+    books.value.push(newBook)
+
+    return { success: 'Libro creado con éxito.' }
+  }
+
+  return { categories, books, quantityBooks, quantityCategories, addBook }
 })
