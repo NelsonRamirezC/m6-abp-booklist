@@ -7,7 +7,7 @@
         <section v-if="book.id" class="row justify-content-center">
             <div class="col-12 col-lg-10 col-xl-8">
                 <div class="card shadow-sm border-0 h-100">
-                    <!-- <div class="row g-0"> -->
+                    <div class="row g-0"> <!-- ← FALTA: Descomenta y agrega aquí -->
                         <div class="col-md-5">
                             <img :src="book.image" :alt="book.title"
                                 class="img-fluid rounded-start h-100 object-fit-cover" style="height: 400px;">
@@ -25,12 +25,14 @@
                                 <button class="btn btn-outline-secondary w-100">Añadir a favoritos</button>
                             </div>
                         </div>
-                    </div>
+                    </div> <!-- ← CIERRE del row g-0 -->
                 </div>
             </div>
+            <!-- ← SOBRA: Elimina este </div> extra -->
         </section>
     </main>
 </template>
+
 
 <script setup>
 import HeaderComp from '@/components/HeaderComp.vue';
