@@ -13,6 +13,13 @@ const router = createRouter({
       name: 'books',
       component: () => import('../views/BooksView.vue'),
     },
+    //RUTA DINÁMICA
+    {
+      path: '/book/:id',
+      name: 'book-detail',
+      component: () => import('../views/BookDetailView.vue'),
+      props: true
+    },
     {
       path: '/admin/books',
       name: 'admin-books',

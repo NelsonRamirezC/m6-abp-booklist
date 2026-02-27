@@ -134,5 +134,11 @@ export const useBooksStore = defineStore('books', () => {
     return {success: "Libro eliminado con éxito"};
   }
 
-  return { categories, books, quantityBooks, quantityCategories, addBook, deleteBook }
+  function findBook(id){
+    let book = books.value.find(b => b.id == id);
+
+    return book;
+  }
+
+  return { categories, books, quantityBooks, quantityCategories, addBook, deleteBook, findBook }
 })

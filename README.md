@@ -36,3 +36,10 @@ npm run dev
 ```sh
 npm run build
 ```
+
+### REQUERIMIENTOS PENDIENTES
+
+- Detalle del libro usando rutas dinámicas
+- Vista Inicio
+- filtrar autor o categoría
+- Editar Book en vista crud.
