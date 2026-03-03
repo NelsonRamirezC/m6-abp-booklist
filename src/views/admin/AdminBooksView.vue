@@ -77,6 +77,7 @@
 import HeaderComp from '@/components/HeaderComp.vue';
 import { useBooksStore } from '@/stores/books.store';
 import { ref } from 'vue';
+import Swal from 'sweetalert2';
 
 const booksStore = useBooksStore();
 
@@ -116,7 +117,11 @@ const addBook = () => {
     let respuesta = booksStore.addBook(title, author, category, price, image);
 
     if (respuesta.success) {
-        alert(respuesta.success);
+
+        Swal.fire({
+            title: respuesta.success,
+            icon: "success",
+        });
     }
 
     resetBookForm();
@@ -125,22 +130,38 @@ const addBook = () => {
 const editBook = () => {
     let { title, author, category, price, image, id } = bookForm.value;
 
-    let respuesta = booksStore.editBook(title, author, category, price, image, id);
+    let originalBook = booksStore.findBook(id);
 
-    if (respuesta.success) {
-        alert(respuesta.success);
-    }else {
-        alert(respuesta.error);
-    }
+    Swal.fire({
+        title: `Está seguro de editar el libro: ${originalBook.title}`,
+        showDenyButton: true,
+        confirmButtonText: "Editar",
+        denyButtonText: `No editar`
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let respuesta = booksStore.editBook(title, author, category, price, image, id);
+            Swal.fire(respuesta.success, "", "success");
+        } else if (result.isDenied) {
+            Swal.fire("los cambios no han sido guardados.", "", "info");
+        }
+    }).catch(() => {
+        Swal.fire({
+            icon: "error",
+            title: "No se pudo crear el libro correctamente.",
+            text: "Vuelva a intentar...",
+        });
+    })
 
-    resetBookForm();
+        .finally(() => {
+            resetBookForm();
+        });
 };
 
 
 const addOrEditBook = () => {
-    if(editMode.value){
+    if (editMode.value) {
         editBook();
-    }else {
+    } else {
         addBook();
     }
 }
