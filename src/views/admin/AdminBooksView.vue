@@ -5,7 +5,7 @@
         <main class="container">
             <div class="row justify-content-center">
                 <div class="col-12 col-md-6 col-lg-5">
-                    <form @submit.prevent="addBook">
+                    <form @submit.prevent="addOrEditBook">
                         <div class="mb-3">
                             <label class="form-label">Titulo:</label>
                             <input class="form-control" type="text" required v-model="bookForm.title">
@@ -31,7 +31,9 @@
                             <input class="form-control" type="number" min="0" required v-model="bookForm.price">
                         </div>
                         <div class="mb-3">
-                            <button type="submit" class="btn btn-primary">Crear</button>
+                            <button type="submit" class="btn btn-primary" v-if="!editMode">Crear</button>
+                            <button type="submit" class="btn btn-warning" v-if="editMode">Editar</button>
+                            <button class="btn btn-secondary ms-1" @click="resetBookForm">Reset</button>
                         </div>
                     </form>
                 </div>
@@ -60,8 +62,9 @@
                         <td>{{ book.category }}</td>
                         <td>{{ book.price.toLocaleString("es-CL") }}</td>
                         <td>
-                            <button class="btn btn-warning mx-1">Editar</button>
-                            <button class="btn btn-danger mx-1" @click="deleteBook(book.id, book.title)">Eliminar</button>
+                            <button class="btn btn-warning mx-1" @click="preEditBook(index)">Editar</button>
+                            <button class="btn btn-danger mx-1"
+                                @click="deleteBook(book.id, book.title)">Eliminar</button>
                         </td>
                     </tr>
                 </tbody>
@@ -77,7 +80,7 @@ import { ref } from 'vue';
 
 const booksStore = useBooksStore();
 
-const idCurrentBook = ref(0);
+// const idCurrentBook = ref(0);
 
 const bookForm = ref({
     id: '',
@@ -87,6 +90,8 @@ const bookForm = ref({
     price: 0,
     image: 'https://placehold.co/300x200',
 });
+
+const editMode = ref(false);
 
 
 //MÉTODOS -> ACTIONS
@@ -99,10 +104,13 @@ const resetBookForm = () => {
         category: '',
         price: 0,
         image: 'https://placehold.co/300x200',
-    }
+    };
+
+    editMode.value = false;
 }
 
 const addBook = () => {
+
     let { title, author, category, price, image } = bookForm.value;
 
     let respuesta = booksStore.addBook(title, author, category, price, image);
@@ -112,19 +120,50 @@ const addBook = () => {
     }
 
     resetBookForm();
+};
+
+const editBook = () => {
+    let { title, author, category, price, image, id } = bookForm.value;
+
+    let respuesta = booksStore.editBook(title, author, category, price, image, id);
+
+    if (respuesta.success) {
+        alert(respuesta.success);
+    }else {
+        alert(respuesta.error);
+    }
+
+    resetBookForm();
+};
+
+
+const addOrEditBook = () => {
+    if(editMode.value){
+        editBook();
+    }else {
+        addBook();
+    }
 }
 
 const deleteBook = (id, title) => {
-    if(confirm(`Está seguro que desea eliminar el libro: ${title}?`)){
+    if (confirm(`Está seguro que desea eliminar el libro: ${title}?`)) {
         let respuesta = booksStore.deleteBook(id);
 
-        if(respuesta.success){
+        if (respuesta.success) {
             alert(respuesta.success);
-        }else {
+        } else {
             alert(respuesta.error);
         }
     }
-}
+};
+
+const preEditBook = (index) => {
+    editMode.value = true;
+
+    let selectedBook = booksStore.books[index];
+
+    bookForm.value = { ...selectedBook }; // operador spread
+};
 
 </script>
 
