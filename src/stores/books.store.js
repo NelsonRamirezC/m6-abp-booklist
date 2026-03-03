@@ -110,6 +110,11 @@ export const useBooksStore = defineStore('books', () => {
   const quantityBooks = computed(() => books.value.length)
   const quantityCategories = computed(() => categories.value.length)
 
+  const categoriesInUse = computed(() => {
+    let categories = new Set(books.value.map((book) => book.category))
+
+    return [...categories]
+  })
 
   // ACTIONS -> MÉTODOS
   function addBook(title, author, category, price, image) {
@@ -120,37 +125,43 @@ export const useBooksStore = defineStore('books', () => {
     books.value.push(newBook)
 
     return { success: 'Libro creado con éxito.' }
-  };
-
-
-  function deleteBook(id){
-
-    let indexBook = books.value.findIndex(b => b.id == id);
-
-    if(indexBook < 0) return {error: "Libro no encontrado..."};
-
-    books.value.splice(indexBook, 1);
-
-    return {success: "Libro eliminado con éxito"};
-  };
-
-  function findBook(id){
-    let book = books.value.find(b => b.id == id);
-
-    return book;
-  };
-
-  function editBook(title, author, category, price, image, id){
-
-    let indexBook = books.value.findIndex(b => b.id == id);
-
-    if(indexBook < 0) return {error: "Libro no encontrado..."};
-
-    books.value[indexBook] = { title, author, category, price, image };
-
-    return {success: "Libro actualizado con éxito"};
-
   }
 
-  return { categories, books, quantityBooks, quantityCategories, addBook, deleteBook, findBook, editBook }
+  function deleteBook(id) {
+    let indexBook = books.value.findIndex((b) => b.id == id)
+
+    if (indexBook < 0) return { error: 'Libro no encontrado...' }
+
+    books.value.splice(indexBook, 1)
+
+    return { success: 'Libro eliminado con éxito' }
+  }
+
+  function findBook(id) {
+    let book = books.value.find((b) => b.id == id)
+
+    return book
+  }
+
+  function editBook(title, author, category, price, image, id) {
+    let indexBook = books.value.findIndex((b) => b.id == id)
+
+    if (indexBook < 0) return { error: 'Libro no encontrado...' }
+
+    books.value[indexBook] = { title, author, category, price, image }
+
+    return { success: 'Libro actualizado con éxito' }
+  }
+
+  return {
+    categories,
+    books,
+    quantityBooks,
+    quantityCategories,
+    categoriesInUse,
+    addBook,
+    deleteBook,
+    findBook,
+    editBook,
+  }
 })
