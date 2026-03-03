@@ -153,6 +153,10 @@ export const useBooksStore = defineStore('books', () => {
     return { success: 'Libro actualizado con éxito' }
   }
 
+  function filterBooksByCategory(category) {
+    return books.value.filter((b) => b.category == category)
+  }
+
   return {
     categories,
     books,
@@ -163,5 +167,6 @@ export const useBooksStore = defineStore('books', () => {
     deleteBook,
     findBook,
     editBook,
+    filterBooksByCategory,
   }
 })
